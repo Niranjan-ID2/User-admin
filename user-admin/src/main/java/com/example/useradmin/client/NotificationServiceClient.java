@@ -1,32 +1,21 @@
 package com.example.useradmin.client;
 
 import com.example.useradmin.client.dto.NotificationRequest;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import java.util.Map;
 
 @Service
 public class NotificationServiceClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationServiceClient.class);
 
-    private final RestTemplate restTemplate;
-    private final String notificationServiceUrl;
-    private final String notificationTriggerEndpoint = "/api/v1/notify/trigger"; // As per user spec
+    private final NotificationServiceFeignClient notificationServiceFeignClient;
 
-    public NotificationServiceClient(RestTemplate restTemplate,
-                                     @Value("${notification.service.base-url}") String notificationServiceBaseUrl) {
-        this.restTemplate = restTemplate;
-        this.notificationServiceUrl = notificationServiceBaseUrl + notificationTriggerEndpoint;
+    public NotificationServiceClient(NotificationServiceFeignClient notificationServiceFeignClient) {
+        this.notificationServiceFeignClient = notificationServiceFeignClient;
     }
 
     public void sendOtpEmail(String userEmail, String otp) {
@@ -39,25 +28,22 @@ public class NotificationServiceClient {
         request.addPayloadVariable("otpCode", otp);
         request.addPayloadVariable("userName", userEmail); // Or a more generic placeholder if name not known yet
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<NotificationRequest> entity = new HttpEntity<>(request, headers);
-
         try {
-            logger.info("Sending OTP notification request to {}: {}", notificationServiceUrl, request);
-            // Assuming the notification service returns a 2xx on success and doesn't require specific response handling here
-            ResponseEntity<String> response = restTemplate.exchange(notificationServiceUrl, HttpMethod.POST, entity, String.class);
-            logger.info("Notification service response status: {}", response.getStatusCode());
+            logger.info("Sending OTP notification request via Feign: {}", request);
+            ResponseEntity<String> response = notificationServiceFeignClient.sendNotification(request);
+            logger.info("Notification service (Feign) response status: {}", response.getStatusCode());
             if (!response.getStatusCode().is2xxSuccessful()) {
-                // Log non-successful responses that are not exceptions
-                logger.warn("Notification service responded with status {} and body: {}", response.getStatusCode(), response.getBody());
-                // Depending on requirements, might throw a custom exception here
+                logger.warn("Notification service (Feign) responded with status {} and body: {}", response.getStatusCode(), response.getBody());
+                // Consider throwing a custom exception for non-2xx responses if specific handling is needed.
+                // For example: throw new NotificationServiceException("Notification service returned status " + response.getStatusCode());
             }
-        } catch (RestClientException e) {
-            logger.error("Error calling notification service at {}: {}", notificationServiceUrl, e.getMessage());
-            // Depending on requirements, might throw a custom exception here to be handled upstream
-            // For example: throw new NotificationServiceException("Failed to send OTP email", e);
-            // For now, just logging the error. The calling service needs to be aware of potential failures.
+        } catch (FeignException e) {
+            logger.error("Error calling notification service via Feign: Status: {}, Body: {}, Message: {}", e.status(), e.contentUTF8(), e.getMessage(), e);
+            // Depending on requirements, re-throw as a custom exception or handle as per specific needs.
+            // For example: throw new NotificationServiceException("Failed to send OTP email due to Feign client error", e);
+        } catch (Exception e) { // Catch any other unexpected exceptions
+            logger.error("Unexpected error sending OTP email via Feign for email {}: {}", userEmail, e.getMessage(), e);
+            // throw new NotificationServiceException("Unexpected error sending OTP email", e);
         }
     }
 }

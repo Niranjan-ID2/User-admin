@@ -61,7 +61,7 @@ public class UserRegistrationService {
         }
 
         // New user registration
-        User newUser = new User(email);
+        User newUser = User.builder().email(email).build();
         newUser.setStatus(UserStatus.PENDING_ACTIVATION);
         generateAndSendOtp(newUser);
     }
