@@ -9,6 +9,7 @@
 /app/user-admin/src/main/java/com/example/useradmin/controller/UserRegistrationController.java
 /app/user-admin/src/main/java/com/example/useradmin/dto/SimpleMessageResponse.java
 /app/user-admin/src/main/java/com/example/useradmin/dto/UserActivationRequest.java
+/app/user-admin/src/main/java/com/example/useradmin/dto/UserActivationResponse.java
 /app/user-admin/src/main/java/com/example/useradmin/dto/UserProfileUpdateRequest.java
 /app/user-admin/src/main/java/com/example/useradmin/dto/UserRegistrationRequest.java
 /app/user-admin/src/main/java/com/example/useradmin/dto/UserResponse.java
@@ -22,6 +23,9 @@
 /app/user-admin/src/main/java/com/example/useradmin/model/User.java
 /app/user-admin/src/main/java/com/example/useradmin/model/UserStatus.java
 /app/user-admin/src/main/java/com/example/useradmin/repository/UserRepository.java
+/app/user-admin/src/main/java/com/example/useradmin/security/CustomUserDetailsService.java
+/app/user-admin/src/main/java/com/example/useradmin/security/JwtAuthFilter.java
+/app/user-admin/src/main/java/com/example/useradmin/security/JwtTokenProvider.java
 /app/user-admin/src/main/java/com/example/useradmin/service/OtpService.java
 /app/user-admin/src/main/java/com/example/useradmin/service/UserActivationService.java
 /app/user-admin/src/main/java/com/example/useradmin/service/UserProfileService.java
