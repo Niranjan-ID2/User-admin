@@ -1,8 +1,10 @@
 com/example/useradmin/client/dto/NotificationRequest.class
+com/example/useradmin/security/CustomUserDetailsService.class
 com/example/useradmin/config/AppConfig.class
 com/example/useradmin/service/UserProfileService.class
 com/example/useradmin/dto/SimpleMessageResponse.class
 com/example/useradmin/config/SecurityConfig.class
+com/example/useradmin/security/JwtAuthFilter.class
 com/example/useradmin/dto/UserRegistrationRequest.class
 com/example/useradmin/exception/UserNotActiveException.class
 com/example/useradmin/repository/UserRepository.class
@@ -25,6 +27,8 @@ com/example/useradmin/exception/NotificationServiceException.class
 com/example/useradmin/dto/UserResponse.class
 com/example/useradmin/dto/UserActivationRequest.class
 com/example/useradmin/exception/UserAlreadyExistsException.class
+com/example/useradmin/security/JwtTokenProvider.class
+com/example/useradmin/dto/UserActivationResponse.class
 com/example/useradmin/service/UserRegistrationService.class
 com/example/useradmin/model/UserStatus.class
 com/example/useradmin/exception/InvalidOtpException.class

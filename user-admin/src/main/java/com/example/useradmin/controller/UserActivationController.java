@@ -1,7 +1,7 @@
 package com.example.useradmin.controller;
 
 import com.example.useradmin.dto.UserActivationRequest;
-import com.example.useradmin.dto.SimpleMessageResponse;
+import com.example.useradmin.dto.UserActivationResponse;
 import com.example.useradmin.service.UserActivationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ public class UserActivationController {
     }
 
     @PostMapping("/activate")
-    public ResponseEntity<SimpleMessageResponse> activateUser(@Valid @RequestBody UserActivationRequest activationRequest) {
-        userActivationService.activateUser(activationRequest.getEmail(), activationRequest.getOtp());
-        return ResponseEntity.ok(new SimpleMessageResponse("User activated successfully."));
+    public ResponseEntity<UserActivationResponse> activateUser(@Valid @RequestBody UserActivationRequest activationRequest) {
+        UserActivationResponse activationResponse = userActivationService.activateUser(activationRequest.getEmail(), activationRequest.getOtp());
+        return ResponseEntity.ok(activationResponse);
     }
 }

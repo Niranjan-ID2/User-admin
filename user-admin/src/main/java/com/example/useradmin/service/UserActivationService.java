@@ -4,9 +4,15 @@ import com.example.useradmin.exception.InvalidOtpException;
 import com.example.useradmin.exception.OtpExpiredException;
 import com.example.useradmin.exception.UserAlreadyActiveException;
 import com.example.useradmin.exception.UserNotFoundException;
+import com.example.useradmin.dto.UserActivationResponse;
+import com.example.useradmin.exception.InvalidOtpException;
+import com.example.useradmin.exception.OtpExpiredException;
+import com.example.useradmin.exception.UserAlreadyActiveException;
+import com.example.useradmin.exception.UserNotFoundException;
 import com.example.useradmin.model.User;
 import com.example.useradmin.model.UserStatus;
 import com.example.useradmin.repository.UserRepository;
+import com.example.useradmin.security.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,14 +27,16 @@ public class UserActivationService {
 
     private final UserRepository userRepository;
     private final OtpService otpService; // OtpService handles OTP validation using PasswordEncoder
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserActivationService(UserRepository userRepository, OtpService otpService) {
+    public UserActivationService(UserRepository userRepository, OtpService otpService, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.otpService = otpService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Transactional
-    public void activateUser(String email, String otp) {
+    public UserActivationResponse activateUser(String email, String otp) {
         logger.info("Attempting to activate user with email: {}", email);
 
         User user = userRepository.findByEmail(email)
@@ -70,5 +78,8 @@ public class UserActivationService {
 
         userRepository.save(user);
         logger.info("User {} successfully activated.", email);
+
+        String token = jwtTokenProvider.generateTokenFromUsername(user.getEmail());
+        return new UserActivationResponse("User activated successfully.", token);
     }
 }
