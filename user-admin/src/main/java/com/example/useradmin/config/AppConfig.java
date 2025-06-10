@@ -1,14 +1,10 @@
 package com.example.useradmin.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+    // RestTemplate bean removed as it's no longer used by NotificationServiceClient
+    // and assumed not used elsewhere for this refactoring.
 }

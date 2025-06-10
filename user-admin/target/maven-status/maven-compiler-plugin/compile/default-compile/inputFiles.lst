@@ -1,5 +1,6 @@
 /app/user-admin/src/main/java/com/example/useradmin/UserAdminApplication.java
 /app/user-admin/src/main/java/com/example/useradmin/client/NotificationServiceClient.java
+/app/user-admin/src/main/java/com/example/useradmin/client/NotificationServiceFeignClient.java
 /app/user-admin/src/main/java/com/example/useradmin/client/dto/NotificationRequest.java
 /app/user-admin/src/main/java/com/example/useradmin/config/AppConfig.java
 /app/user-admin/src/main/java/com/example/useradmin/config/SecurityConfig.java
